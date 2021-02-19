@@ -3,12 +3,12 @@
 // 相対パスだとエラーになる時があるので、絶対パスで指定してあげる
 require_once(__DIR__ . '/../app/config.php');
 
-createToken();
+Token::create();
 
 $pdo = getPdoInstance();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-  validateToken();
+  Token::validate();
   $action = filter_input(INPUT_GET, 'action');
 
   switch ($action) {
