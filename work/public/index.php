@@ -45,17 +45,19 @@ $todos = getTodos($pdo);
 
   <ul>
     <?php foreach ($todos as $todo): ?>
-      <li>
-        <form action="?action=toggle">
-          <input type="checkbox" <?= $todo->is_done ? 'checked' : ''; ?>>
-          <input type="hidden" name="id" value="<?= h($todo->id); ?>">
-          <input type="hidden" name="token" value="<?= h($_SESSION['token']); ?>">
-        </form>
-        <span class="<?= $todo->is_done ? 'done' : ''; ?>">
-          <?= h($todo->title); ?>
-        </span>
-      </li>
+    <li>
+      <form action="?action=toggle" method="post">
+        <input type="checkbox" <?= $todo->is_done ? 'checked' : ''; ?>>
+        <input type="hidden" name="id" value="<?= h($todo->id); ?>">
+        <input type="hidden" name="token" value="<?= h($_SESSION['token']); ?>">
+      </form>
+      <span class="<?= $todo->is_done ? 'done' : ''; ?>">
+        <?= h($todo->title); ?>
+      </span>
+    </li>
     <?php endforeach; ?>
   </ul>
+
+  <script src="js/main.js"></script>
 </body>
 </html>
