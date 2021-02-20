@@ -28,6 +28,9 @@ class Todo
         case 'delete':
           $this->delete();
           break;
+        case 'purge':
+          $this->purge();
+          break;
         default:
           exit;
       }
@@ -38,40 +41,45 @@ class Todo
   }
 
   private function add()
-{
-  $title = trim(filter_input(INPUT_POST, 'title'));
-  if ($title === '') {
-    return;
-  }
+  {
+    $title = trim(filter_input(INPUT_POST, 'title'));
+    if ($title === '') {
+      return;
+    }
 
-  $stmt = $this->pdo->prepare("INSERT INTO todos (title) VALUES (:title)");
-  $stmt->bindValue('title', $title, \PDO::PARAM_STR);
-  $stmt->execute();
-}
+    $stmt = $this->pdo->prepare("INSERT INTO todos (title) VALUES (:title)");
+    $stmt->bindValue('title', $title, \PDO::PARAM_STR);
+    $stmt->execute();
+  }
 
   private function toggle()
-{
-  $id = filter_input(INPUT_POST, 'id');
-  if (empty($id)) {
-    return;
-  }
+  {
+    $id = filter_input(INPUT_POST, 'id');
+    if (empty($id)) {
+      return;
+    }
 
-  $stmt = $this->pdo->prepare("UPDATE todos SET is_done = NOT is_done WHERE id = :id");
-  $stmt->bindValue('id', $id, \PDO::PARAM_INT);
-  $stmt->execute();
-}
+    $stmt = $this->pdo->prepare("UPDATE todos SET is_done = NOT is_done WHERE id = :id");
+    $stmt->bindValue('id', $id, \PDO::PARAM_INT);
+    $stmt->execute();
+  }
 
   private function delete()
-{
-  $id = filter_input(INPUT_POST, 'id');
-  if (empty($id)) {
-    return;
+  {
+    $id = filter_input(INPUT_POST, 'id');
+    if (empty($id)) {
+      return;
+    }
+
+    $stmt = $this->pdo->prepare("DELETE FROM todos WHERE id = :id");
+    $stmt->bindValue('id', $id, \PDO::PARAM_INT);
+    $stmt->execute();
   }
 
-  $stmt = $this->pdo->prepare("DELETE FROM todos WHERE id = :id");
-  $stmt->bindValue('id', $id, \PDO::PARAM_INT);
-  $stmt->execute();
-}
+  public function purge()
+  {
+    $this->pdo->query("DELETE FROM todos WHERE is_done = 1");
+  }
 
   public function getAll()
   {
@@ -79,5 +87,4 @@ class Todo
     $todos = $stmt->fetchAll();
     return $todos;
   }
-
 }
