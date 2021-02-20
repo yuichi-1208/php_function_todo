@@ -1,5 +1,6 @@
 <?php
 
+namespace MyApp;
 class token
 {
   public static function create()
